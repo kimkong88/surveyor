@@ -1,0 +1,15 @@
+generated: "2026-01-03"
+project: "surveyor"
+project_type: "software"
+selected_track: "bmad-method"
+field_type: "greenfield"
+workflow_path: "{project-root}/_bmad/bmm/workflows/workflow-status/paths/method-greenfield.yaml"
+workflow_status:
+  prd: "_bmad-output/planning-artifacts/prd.md"
+  create-ux-design: conditional
+  create-architecture: required
+  create-epics-and-stories: required
+  test-design: optional
+  implementation-readiness: required
+  sprint-planning: required
+
