@@ -1,4 +1,4 @@
-# Story 2.2: Microphone permission + voice input capture
+# Story 2.3: Microphone permission + voice input capture
 
 Status: ready-for-dev
 
@@ -22,7 +22,7 @@ so that I can interact hands-free.
 
 **Epic 2: Conversational Guidance (Voice/Text) with Accessibility**
 
-This story enables the **hands-free voice input** capability that is core to the surveyor value proposition. While Story 2.1 handled AI voice *output*, this story completes the bidirectional voice loop by capturing user speech input.
+This story enables the **hands-free voice input** capability that is core to the surveyor value proposition. While Story 2.2 handled AI voice *output*, this story completes the bidirectional voice loop by capturing user speech input.
 
 **Why this matters:**
 - Homeowners capturing photos need hands-free interaction (holding phone/camera)
@@ -32,7 +32,7 @@ This story enables the **hands-free voice input** capability that is core to the
 
 **User Journey Context:**
 - User has already seen permission guidance on Welcome screen (Story 1.1)
-- Voice toggle from Story 2.1 controls both input and output
+- Voice toggle from Story 2.2 controls both input and output
 - This story focuses on the *input* side: requesting permissions and capturing audio
 
 ## Tasks / Subtasks
@@ -171,7 +171,7 @@ surveyor-frontend/
 **Integration Points:**
 - `app/conversation/page.tsx`: Add VoiceInputButton to conversation UI
 - `components/AppLayout.tsx`: May need voice indicator in header/footer
-- Story 2.1 voice toggle: Extend to control both input and output
+- Story 2.2 voice toggle: Extend to control both input and output
 
 ### Testing Requirements
 
@@ -207,7 +207,7 @@ surveyor-frontend/
 - Accessibility baseline: keyboard navigation, ARIA labels, focus management
 - Testing setup: Vitest + RTL + jest-dom configured
 
-**From Story 2.1 (AI voice output):**
+**From Story 2.2 (AI voice output):**
 - Voice toggle control exists (persists for session)
 - VoiceContext or similar state management for `voiceEnabled`
 - Caption rendering alongside audio (text fallback pattern)
@@ -240,26 +240,32 @@ surveyor-frontend/
 **Performance Optimization:**
 - Audio chunk size: 100-500ms chunks for balance of latency and overhead
 - Bandwidth: ~50-100 kbps for voice (from PRD)
-- Monitor connection quality and degrade to text if needed (Story 2.3)
+- Monitor connection quality and degrade to text if needed (Story 2.4)
 
 ### References
 
 **Source Documents:**
-- [Epic 2 Story 2.2](_bmad-output/planning-artifacts/epics.md#Story-2.2)
+- [Epic 2 Story 2.3](_bmad-output/planning-artifacts/epics.md#Story-2.3) (renumbered from 2.2)
 - [PRD: Real-Time Conversational Architecture](_bmad-output/planning-artifacts/prd.md#Real-Time-Conversational-Architecture)
 - [Architecture: WebSocket Protocol](docs/api.md#WS-realtime-sessions)
 - [Security: Session Management](docs/security.md#Sessions-Realtime)
 
 **Related Stories:**
 - Story 1.1: Frontend shell scaffold (baseline UI structure)
-- Story 2.1: AI voice output with captions (voice toggle, state management)
-- Story 2.3: Text-only mode and auto-fallback (graceful degradation)
-- Story 2.4: Interrupt-and-ask (bidirectional conversation flow)
+- Story 2.1: Text Chat Interface (foundation for voice to build on)
+- Story 2.2: AI voice output with captions (voice toggle, state management)
+- Story 2.4: Text-only mode and auto-fallback (graceful degradation)
+- Story 2.5: Interrupt-and-ask (bidirectional conversation flow)
 
 **Technical References:**
 - [MDN: getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)
 - [MDN: MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)
 - [MDN: Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API)
+
+## Dependencies
+
+- Story 2.1 (Text Chat Interface) - must exist as foundation
+- Story 2.2 (AI voice output) - voice toggle mechanism should exist
 
 ## Definition of Done
 
@@ -287,11 +293,12 @@ Claude Sonnet 4.5 (Cursor)
 
 - Ultimate context engine analysis completed
 - Comprehensive developer guide created with architecture alignment
-- Previous story learnings incorporated (Story 1.1, 2.1)
+- Previous story learnings incorporated (Story 1.1, 2.2)
 - Latest browser API compatibility verified
 - WebSocket message format from API contract included
 - Error taxonomy and recovery strategies documented
 - Mobile-first and accessibility requirements emphasized
+- Renumbered from 2.2 to 2.3 to accommodate new Story 2.1 (Text Chat Interface)
 
 ### File List
 

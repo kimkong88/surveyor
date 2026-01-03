@@ -1,4 +1,4 @@
-# Story 2.1: AI voice output with captions and voice toggle
+# Story 2.2: AI voice output with captions and voice toggle
 
 Status: ready-for-dev
 
@@ -35,12 +35,16 @@ so that I can follow guidance in my preferred modality.
 ### Project Structure Notes
 
 - Place UI control in Conversation Pane header/footer per IA.
-- Keep audio/caption logic modular to support future input (Story 2.2) without refactor.
+- Keep audio/caption logic modular to support future input (Story 2.3) without refactor.
 
 ### References
 
-- Source: _bmad-output/planning-artifacts/epics.md#Story-2.1
+- Source: _bmad-output/planning-artifacts/epics.md#Story-2.2 (renumbered from 2.1)
 - Accessibility: WCAG 2.1 AA compliance notes in epics (Epic 2 context)
+
+## Dependencies
+
+- Story 2.1 (Text Chat Interface) - must exist to add voice output on top
 
 ## Dev Agent Record
 
@@ -51,6 +55,7 @@ GPT-5 (Cursor)
 ### Completion Notes List
 
 - Ultimate context analysis complete; story set to ready-for-dev.
+- Renumbered from 2.1 to 2.2 to accommodate new Story 2.1 (Text Chat Interface)
 
 ### File List
 

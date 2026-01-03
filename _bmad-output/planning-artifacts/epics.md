@@ -507,7 +507,35 @@ So that I can still proceed with the survey.
 
 Voice-first guidance with captions and text fallback; fully accessible interaction model.
 
-### Story 2.1: AI voice output with captions and voice toggle
+### Story 2.1: Text Chat Interface Foundation
+
+As a homeowner,  
+I want to type messages to the AI guide and see our conversation history,  
+So that I can communicate when voice is unavailable or I prefer text.
+
+**Acceptance Criteria:**
+
+**Given** I'm on the Conversation page  
+**When** the interface loads  
+**Then** I see a message history area and a text input field with a send button
+
+**Given** I type a message and press Send (or Enter)  
+**When** the message is sent  
+**Then** my message appears in the conversation history and the AI response follows
+
+**Given** the conversation progresses  
+**When** multiple messages are exchanged  
+**Then** all messages display in chronological order with clear sender identification (User vs. AI)
+
+**Given** long conversations  
+**When** many messages accumulate  
+**Then** the message area scrolls and auto-scrolls to the latest message
+
+**Given** I'm using keyboard only  
+**When** I navigate the chat interface  
+**Then** the input field is focusable and Enter sends the message (Shift+Enter for newline)
+
+### Story 2.2: AI voice output with captions and voice toggle
 
 As a homeowner,  
 I want AI voice responses with captions and a voice toggle,  
@@ -523,7 +551,7 @@ So that I can follow guidance in my preferred modality.
 **When** the next message arrives  
 **Then** only captions/text render; audio is suppressed and the toggle state persists for the session
 
-### Story 2.2: Microphone permission + voice input capture
+### Story 2.3: Microphone permission + voice input capture
 
 As a homeowner,  
 I want to grant microphone access and speak to the assistant,  
@@ -532,14 +560,14 @@ So that I can interact hands-free.
 **Acceptance Criteria:**
 
 **Given** no mic permission yet  
-**When** I press “Enable voice”  
+**When** I press "Enable voice"  
 **Then** the browser permission prompt appears and the app handles allow/deny with clear messaging
 
 **Given** permission is granted  
 **When** I speak  
 **Then** the input stream is captured and routed to the conversation engine; errors are surfaced gracefully with retry
 
-### Story 2.3: Text-only mode and auto-fallback
+### Story 2.4: Text-only mode and auto-fallback
 
 As a homeowner,  
 I want to switch to text-only or auto-fallback when voice is unavailable,  
@@ -555,7 +583,7 @@ So that I can continue without interruption.
 **When** a response would play  
 **Then** the system automatically falls back to text-only and shows a banner; I can revert when voice recovers
 
-### Story 2.4: Interrupt-and-ask with real-time responses
+### Story 2.5: Interrupt-and-ask with real-time responses
 
 As a homeowner,  
 I want to interrupt guidance to ask a question,  
@@ -569,7 +597,7 @@ So that I can clarify and resume smoothly.
 
 **And** the Conversational Clerk chain (LangChain v2026) processes interruptions and responses
 
-### Story 2.5: Accessibility compliance (WCAG AA)
+### Story 2.6: Accessibility compliance (WCAG AA)
 
 As an accessibility-focused user,  
 I want the conversation UI to meet WCAG 2.1 AA,  
@@ -585,7 +613,7 @@ So that I can use it with assistive tech.
 **When** I navigate content  
 **Then** roles/labels are accurate; captions are exposed to AT; color contrast meets AA
 
-### Story 2.6: Mobile clarity and orientation support
+### Story 2.7: Mobile clarity and orientation support
 
 As a homeowner on mobile,  
 I want layouts that work in portrait and landscape,  
