@@ -11,7 +11,7 @@ When a homeowner presses “Get started” on the Welcome screen with a valid li
 - Loading/disabled states on the CTA.
 - Error banner on failure with retry.
 - Client state update to store `sessionId`.
-- Mock mode when backend is unavailable.
+- Mock mode was originally planned; removed for MVP. Frontend always calls the real API path.
 
 ## Out of Scope
 - Backend implementation of session redemption.
@@ -30,7 +30,7 @@ So that my progress can be tracked.
 ## Acceptance Criteria
 - Given I am on the Welcome screen with a valid token in state  
   When I press "Get started"  
-  Then the app calls a redeem/start-session endpoint (mocked if backend unavailable) and stores a `sessionId` in client state
+  Then the app calls a redeem/start-session endpoint (no mock path in MVP) and stores a `sessionId` in client state
 
 - Given the endpoint returns an error  
   When I press "Get started"  
@@ -44,8 +44,7 @@ So that my progress can be tracked.
    - Default endpoint: `POST /api/sessions/start` (configurable; alias to redeem if needed).
    - Request body: `{ token: string }`. Response: `{ sessionId: string }`.
 2) Mock Mode
-   - Feature flag `feature.mockSessionStart` to bypass network and return `{ sessionId: pseudoUuid() }` after a small delay.
-   - Log mock usage in dev; no PII/token logging in production.
+   - Removed for MVP; no feature flag or mock path remains. Calls always hit the configured API endpoint.
 3) Client State
    - Store `sessionId` and `sessionStatus` (`idle` | `loading` | `ready` | `error`) in a central store (context/zustand/redux).
    - Expose hooks: `useSession()` and `useStartSession()`.
@@ -58,7 +57,7 @@ So that my progress can be tracked.
    - Emit `session_start_request`, `session_start_success`, `session_start_failure` events.
    - Mask the token in telemetry (prefix + length only).
 6) Config
-   - `API_BASE_URL`, `feature.mockSessionStart`, `feature.startSessionNavigateTo` (`/conversation` default).
+   - `API_BASE_URL`, `feature.startSessionNavigateTo` (`/conversation` default). `feature.mockSessionStart` removed for MVP.
 
 ## API Contract (Frontend expectation)
 - POST `/api/sessions/start`
@@ -90,12 +89,12 @@ So that my progress can be tracked.
 - Risk: Token mismatch between state and endpoint.  
   Mitigation: Read token from a single source of truth; block call if missing.
 - Risk: Flaky backend during POC.  
-  Mitigation: Mock mode + exponential backoff retry on client only if explicitly enabled.
+  Mitigation: Mock mode was removed; rely on real API with clear errors and retries when appropriate.
 
 ## Testing Strategy
 - Unit tests:
-  - `startSession` client: success path returns sessionId; error path maps codes; mock mode returns pseudo UUID.
-  - Store reducers/selectors for `sessionStatus` transitions.
+  - `startSession` client: success path returns sessionId; error path maps codes (no mock mode).
+- Store reducers/selectors for `sessionStatus` transitions.
 - Integration tests (component):
   - Welcome CTA: shows loading → success sets `sessionId`; failure shows banner; retry recovers.
 - Accessibility:
@@ -103,7 +102,7 @@ So that my progress can be tracked.
   - Loading state announced (aria-busy or button label/sr-only text).
 
 ## Definition of Done
-- All AC pass locally with and without mock mode.
+- All AC pass locally on the single real-API path (mock mode removed).
 - Telemetry events fire with masked tokens and safe payloads.
 - Unit and integration tests passing.
 - Code reviewed and merged.
@@ -111,11 +110,47 @@ So that my progress can be tracked.
 ## Estimate
 - 0.5–1 day (API client, state, UI wiring, tests, telemetry).
 
-## Tasks
-- Implement `startSession({ token })` API client with config-driven endpoint.
-- Add feature flag + mock path producing a pseudo UUID.
-- Extend session store with `sessionId` and status transitions.
-+- Wire Welcome CTA: loading/disable, success, error banner with retry.
- - Add telemetry events with masking.
- - Write unit/integration tests and basic a11y checks.
+## Tasks/Subtasks
+- [x] Implement `startSession({ token })` API client with config-driven endpoint
+- [x] Add feature flag + mock path producing a pseudo UUID (later removed for MVP)
+- [x] Extend session store with `sessionId` and status transitions
+- [x] Wire Welcome CTA: loading/disable, success, error banner with retry
+- [x] Add telemetry events with masking
+- [x] Write unit/integration tests and basic a11y checks
+
+## Dev Agent Record
+
+### Implementation Plan
+- Initial plan included a feature flag to bypass network and return pseudo UUID; this mock path was removed for MVP and the client always calls the API.
+- Persist sessionId in SessionContext with storage sync; provide retries and error codes.
+- Wire Welcome CTA with loading, a11y, and navigation toggle via env flag.
+- Add telemetry masking and structured events.
+
+### Debug Log
+- Initial API base URL defaulted to localhost; changed to relative for host-agnostic calls.
+- Guarded startSession against missing/empty token to align with risk mitigation.
+
+### Completion Notes
+- Implemented `startSession`, session context state machine, UI wiring, telemetry.
+- Added unit and integration tests covering success, errors, a11y, and retries; mock mode later removed for MVP.
+- Updated sprint status and story metadata.
+
+## File List
+- surveyor-frontend/lib/api-client.ts
+- surveyor-frontend/context/SessionContext.tsx
+- surveyor-frontend/app/welcome/page.tsx
+- surveyor-frontend/lib/telemetry.ts
+- surveyor-frontend/__tests__/api-client.spec.ts
+- surveyor-frontend/__tests__/session-context.spec.tsx
+- surveyor-frontend/__tests__/session-start.spec.tsx
+- _bmad-output/dev-stories/story-1.3-start-session-frontend-call-mock.md
+- _bmad-output/implementation-artifacts/sprint-status.yaml
+
+## Change Log
+- Added token guard and relative default API base URL; mock path later removed for MVP.
+- Documented and checked tasks; recorded completion notes and file list.
+- Synced sprint status for story 1.3.
+
+## Status
+done
 

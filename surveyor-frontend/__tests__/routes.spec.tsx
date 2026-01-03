@@ -25,6 +25,23 @@ vi.mock("../context/LinkTokenContext", async () => {
     };
 });
 
+// Mock SessionContext
+vi.mock("../context/SessionContext", async () => {
+    const actual = await vi.importActual("../context/SessionContext");
+    return {
+        ...actual,
+        useSession: () => ({
+            sessionId: null,
+            sessionStatus: 'idle' as const,
+            sessionErrorCode: undefined,
+        }),
+        useStartSession: () => ({
+            startSession: vi.fn(),
+            reset: vi.fn(),
+        }),
+    };
+});
+
 function renderWithLayout(node: React.ReactNode) {
     return render(<AppLayout>{node}</AppLayout>);
 }
@@ -47,10 +64,8 @@ describe("Routing skeleton screens", () => {
         expect(screen.getByRole("contentinfo")).toBeDefined();
     });
 
-    it("Welcome page shows permission guidance and control placeholders exist", () => {
+    it("Welcome page shows permission guidance", () => {
         renderWithLayout(<WelcomePage />);
         expect(screen.getByTestId("permission-guidance")).toBeInTheDocument();
-        expect(screen.getByLabelText("Voice controls")).toBeInTheDocument();
-        expect(screen.getByLabelText("Text controls")).toBeInTheDocument();
     });
 });

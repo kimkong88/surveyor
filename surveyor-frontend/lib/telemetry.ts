@@ -47,3 +47,52 @@ export function trackEvent(eventName: string, data?: Record<string, unknown>): v
     // }
 }
 
+/**
+ * Tracks session start request event
+ * 
+ * @param token - The link token (will be masked for PII safety)
+ */
+export function trackSessionStartRequest(token: string): void {
+    trackEvent('session_start_request', {
+        token_preview: maskToken(token),
+        timestamp: Date.now(),
+    });
+}
+
+/**
+ * Tracks successful session start event
+ * 
+ * @param sessionId - The created session ID (only length will be logged)
+ * @param durationMs - Time taken to start the session in milliseconds
+ */
+export function trackSessionStartSuccess(sessionId: string, durationMs: number): void {
+    trackEvent('session_start_success', {
+        sessionId_length: sessionId.length,
+        duration_ms: durationMs,
+        timestamp: Date.now(),
+    });
+}
+
+/**
+ * Tracks failed session start event
+ * 
+ * @param errorCode - The error code from API
+ * @param errorMessage - The error message (sanitized to remove PII)
+ * @param durationMs - Time taken before failure in milliseconds
+ */
+export function trackSessionStartFailure(
+    errorCode: string,
+    errorMessage: string,
+    durationMs: number
+): void {
+    // Sanitize error message to remove any potential PII
+    const sanitizedMessage = errorMessage.replace(/[a-zA-Z0-9_-]{8,}/g, '[REDACTED]');
+    
+    trackEvent('session_start_failure', {
+        error_code: errorCode,
+        error_message: sanitizedMessage,
+        duration_ms: durationMs,
+        timestamp: Date.now(),
+    });
+}
+

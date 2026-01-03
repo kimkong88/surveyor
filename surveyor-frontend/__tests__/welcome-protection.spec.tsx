@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import WelcomePage from "../app/welcome/page";
 
@@ -26,6 +26,23 @@ vi.mock("../context/LinkTokenContext", async () => {
     };
 });
 
+// Mock SessionContext
+vi.mock("../context/SessionContext", async () => {
+    const actual = await vi.importActual("../context/SessionContext");
+    return {
+        ...actual,
+        useSession: () => ({
+            sessionId: null,
+            sessionStatus: 'idle' as const,
+            sessionErrorCode: undefined,
+        }),
+        useStartSession: () => ({
+            startSession: vi.fn(),
+            reset: vi.fn(),
+        }),
+    };
+});
+
 describe("Welcome Page Protection", () => {
     beforeEach(() => {
         mockPush.mockClear();
@@ -49,7 +66,7 @@ describe("Welcome Page Protection", () => {
 
         // Should show welcome content
         expect(screen.getByText(/welcome/i)).toBeInTheDocument();
-        expect(screen.getByText(/start survey/i)).toBeInTheDocument();
+        expect(screen.getByText(/get started/i)).toBeInTheDocument();
     });
 
     it("should provide link to get access when denied", () => {

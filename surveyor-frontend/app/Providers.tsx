@@ -2,11 +2,14 @@
 
 import HeroUIProviderWrapper from "../components/HeroUIProviderWrapper";
 import { LinkTokenProvider } from "../context/LinkTokenContext";
+import { SessionProvider } from "../context/SessionContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <HeroUIProviderWrapper>
-            <LinkTokenProvider>{children}</LinkTokenProvider>
+            <LinkTokenProvider>
+                <SessionProvider>{children}</SessionProvider>
+            </LinkTokenProvider>
         </HeroUIProviderWrapper>
     );
 }

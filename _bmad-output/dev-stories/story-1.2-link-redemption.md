@@ -61,7 +61,7 @@ So that I can start a survey session.
 5. Telemetry
     - Fire `link_opened` event with masked token pattern (e.g., first 6 chars + length) to avoid PII leakage.
 6. Config/Flags
-    - Feature flag `feature.linkRedemption` to allow turning this on/off during integration.
+    - Feature flag removed for MVP; link redemption is always on in current build.
 
 ## API Contract (Stubbed)
 
@@ -105,7 +105,7 @@ So that I can start a survey session.
 ## Definition of Done
 
 -   All AC pass in local environment.
--   Routing, state, and error UI implemented behind feature flag.
+-   Routing, state, and error UI always on (feature flag removed for MVP).
 -   Telemetry event emitted with masked token.
 -   Unit and integration tests passing.
 -   Code reviewed and merged.
@@ -122,7 +122,7 @@ So that I can start a survey session.
 -   [x] Implement navigation to Welcome on success.
 -   [x] Implement error UI for invalid tokens.
 -   [x] Add `link_opened` telemetry with masked token preview.
--   [x] Add feature flag and configuration guard.
+-   [x] Add feature flag and configuration guard (later removed for MVP).
 
 ## File List
 

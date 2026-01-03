@@ -5,9 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { validateTokenFormat } from "../../../lib/token-validator";
 import { useLinkToken } from "../../../context/LinkTokenContext";
 import { trackEvent, maskToken } from "../../../lib/telemetry";
-import { isFeatureEnabled } from "../../../lib/feature-flags";
 
-type ErrorType = "disabled" | "invalid" | null;
+type ErrorType = "invalid" | null;
 
 export default function TokenRedemptionPage() {
     const params = useParams();
@@ -22,12 +21,6 @@ export default function TokenRedemptionPage() {
         // Prevent multiple executions
         if (hasProcessed.current) return;
         hasProcessed.current = true;
-
-        // Check if link redemption feature is enabled
-        if (!isFeatureEnabled("linkRedemption")) {
-            setErrorType("disabled");
-            return;
-        }
 
         // Emit telemetry event for link opened
         trackEvent("link_opened", {
@@ -51,11 +44,6 @@ export default function TokenRedemptionPage() {
     // Error state
     if (errorType) {
         const errorConfig = {
-            disabled: {
-                title: "Feature Unavailable",
-                message:
-                    "This feature is currently disabled. Please try again later or contact support.",
-            },
             invalid: {
                 title: "Invalid Link",
                 message:
