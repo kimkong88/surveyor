@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import AppLayout from "../components/AppLayout";
-import WelcomePage from "../app/welcome/page";
-import ConversationPage from "../app/conversation/page";
-import SubmitPage from "../app/submit/page";
+import WelcomePage from "../app/(survey)/start/page";
+import ConversationPage from "../app/(survey)/conversation/page";
+import SubmitPage from "../app/(survey)/submit/page";
 
 // Mock Next.js router
 vi.mock("next/navigation", () => ({
@@ -32,12 +32,26 @@ vi.mock("../context/SessionContext", async () => {
         ...actual,
         useSession: () => ({
             sessionId: null,
-            sessionStatus: 'idle' as const,
+            sessionStatus: "idle" as const,
             sessionErrorCode: undefined,
         }),
         useStartSession: () => ({
             startSession: vi.fn(),
             reset: vi.fn(),
+        }),
+    };
+});
+
+// Mock ProgressContext
+vi.mock("../context/ProgressContext", async () => {
+    const actual = await vi.importActual("../context/ProgressContext");
+    return {
+        ...actual,
+        useProgress: () => ({
+            spaces: [],
+            totalSpaces: 0,
+            completedSpaces: 0,
+            totalItems: 0,
         }),
     };
 });

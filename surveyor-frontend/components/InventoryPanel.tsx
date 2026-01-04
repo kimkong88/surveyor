@@ -13,6 +13,8 @@ export default function InventoryPanel({
 }) {
     return (
         <Drawer
+            placement="bottom"
+            size="full"
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             onClose={onClose}

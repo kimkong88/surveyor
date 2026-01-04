@@ -27,49 +27,62 @@ describe("Link Redemption Route /s/[token]", () => {
     });
 
     it("should render loading state initially", async () => {
-        const TokenPage = (await import("../app/s/[token]/page")).default;
+        const TokenPage = (await import("../app/(survey)/s/[token]/page"))
+            .default;
         render(
             <LinkTokenProvider>
                 <TokenPage />
             </LinkTokenProvider>
         );
-        
+
         // Should show some loading indicator
         expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });
 
     it("should navigate to welcome page with valid token", async () => {
-        const TokenPage = (await import("../app/s/[token]/page")).default;
+        const TokenPage = (await import("../app/(survey)/s/[token]/page"))
+            .default;
         render(
             <LinkTokenProvider>
                 <TokenPage />
             </LinkTokenProvider>
         );
-        
-        // Should redirect to welcome
-        await waitFor(() => {
-            expect(mockReplace).toHaveBeenCalledWith("/welcome");
-        }, { timeout: 2000 });
+
+        // Should redirect to start
+        await waitFor(
+            () => {
+                expect(mockReplace).toHaveBeenCalledWith("/start");
+            },
+            { timeout: 2000 }
+        );
     });
 
     it("should show error for invalid token format", async () => {
         // Set invalid token for this test
         mockToken = "invalid!token@#$";
 
-        const TokenPage = (await import("../app/s/[token]/page")).default;
+        const TokenPage = (await import("../app/(survey)/s/[token]/page"))
+            .default;
         render(
             <LinkTokenProvider>
                 <TokenPage />
             </LinkTokenProvider>
         );
-        
+
         // Should show error heading
-        await waitFor(() => {
-            expect(screen.getByRole("heading", { name: /invalid link/i })).toBeInTheDocument();
-        }, { timeout: 2000 });
+        await waitFor(
+            () => {
+                expect(
+                    screen.getByRole("heading", { name: /invalid link/i })
+                ).toBeInTheDocument();
+            },
+            { timeout: 2000 }
+        );
 
         // Should show Go Home button
-        expect(screen.getByRole("button", { name: /go home/i })).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: /go home/i })
+        ).toBeInTheDocument();
 
         // Should not have redirected
         expect(mockReplace).not.toHaveBeenCalled();
@@ -77,14 +90,15 @@ describe("Link Redemption Route /s/[token]", () => {
 
     it("should emit link_opened telemetry event with masked token", async () => {
         const trackEventSpy = vi.spyOn(telemetry, "trackEvent");
-        
-        const TokenPage = (await import("../app/s/[token]/page")).default;
+
+        const TokenPage = (await import("../app/(survey)/s/[token]/page"))
+            .default;
         render(
             <LinkTokenProvider>
                 <TokenPage />
             </LinkTokenProvider>
         );
-        
+
         // Should have called trackEvent with masked token
         // Token is "valid-test-token-123" = 20 chars, shows up to 6 chars
         expect(trackEventSpy).toHaveBeenCalledWith("link_opened", {
@@ -92,4 +106,3 @@ describe("Link Redemption Route /s/[token]", () => {
         });
     });
 });
-

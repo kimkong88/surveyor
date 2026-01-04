@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import WelcomePage from "../app/welcome/page";
+import WelcomePage from "../app/(survey)/start/page";
 
 const mockPush = vi.fn();
 
@@ -33,7 +33,7 @@ vi.mock("../context/SessionContext", async () => {
         ...actual,
         useSession: () => ({
             sessionId: null,
-            sessionStatus: 'idle' as const,
+            sessionStatus: "idle" as const,
             sessionErrorCode: undefined,
         }),
         useStartSession: () => ({
@@ -79,4 +79,3 @@ describe("Welcome Page Protection", () => {
         expect(getAccessButton).toBeInTheDocument();
     });
 });
-

@@ -2,9 +2,9 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import { validateTokenFormat } from "../../../lib/token-validator";
-import { useLinkToken } from "../../../context/LinkTokenContext";
-import { trackEvent, maskToken } from "../../../lib/telemetry";
+import { validateTokenFormat } from "../../../../lib/token-validator";
+import { useLinkToken } from "../../../../context/LinkTokenContext";
+import { trackEvent, maskToken } from "../../../../lib/telemetry";
 
 type ErrorType = "invalid" | null;
 
@@ -36,8 +36,8 @@ export default function TokenRedemptionPage() {
         // Store token in state
         setLinkToken(token);
 
-        // Navigate to welcome page
-        router.replace("/welcome");
+        // Navigate to start page
+        router.replace("/start");
     }, [token, setLinkToken, router]);
     /* eslint-enable react-hooks/set-state-in-effect */
 

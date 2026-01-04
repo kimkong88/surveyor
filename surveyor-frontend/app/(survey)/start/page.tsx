@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { useLinkToken } from "../../context/LinkTokenContext";
-import { useSession, useStartSession } from "../../context/SessionContext";
-import { trackEvent } from "../../lib/telemetry";
+import { useLinkToken } from "../../../context/LinkTokenContext";
+import { useSession, useStartSession } from "../../../context/SessionContext";
 
 /**
  * Get user-friendly error message for error codes

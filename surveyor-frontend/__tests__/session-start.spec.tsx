@@ -6,7 +6,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import WelcomePage from "../app/welcome/page";
+import WelcomePage from "../app/(survey)/start/page";
 import { SessionProvider } from "../context/SessionContext";
 import * as apiClient from "../lib/api-client";
 
@@ -40,9 +40,9 @@ describe("Session Start Integration", () => {
     beforeEach(() => {
         mockPush.mockClear();
         vi.clearAllMocks();
-        
+
         // Setup default environment
-        process.env.NEXT_PUBLIC_START_SESSION_NAVIGATE = 'true';
+        process.env.NEXT_PUBLIC_START_SESSION_NAVIGATE = "true";
     });
 
     afterEach(() => {
@@ -52,8 +52,10 @@ describe("Session Start Integration", () => {
     describe("Success Flow", () => {
         it("should complete full session start flow and navigate to conversation", async () => {
             const mockSessionId = "session-abc-123";
-            
-            vi.mocked(apiClient.startSession).mockResolvedValue({ sessionId: mockSessionId });
+
+            vi.mocked(apiClient.startSession).mockResolvedValue({
+                sessionId: mockSessionId,
+            });
 
             const user = userEvent.setup();
             renderWithSession(<WelcomePage />);
@@ -67,17 +69,21 @@ describe("Session Start Integration", () => {
 
             // Wait for success and navigation (may happen very quickly)
             await waitFor(() => {
-                expect(mockPush).toHaveBeenCalledWith('/conversation');
+                expect(mockPush).toHaveBeenCalledWith("/conversation");
             });
 
             // Verify API was called correctly
-            expect(apiClient.startSession).toHaveBeenCalledWith({ token: "test-token-123" });
+            expect(apiClient.startSession).toHaveBeenCalledWith({
+                token: "test-token-123",
+            });
         });
 
         it("should skip navigation when NEXT_PUBLIC_START_SESSION_NAVIGATE is false", async () => {
-            process.env.NEXT_PUBLIC_START_SESSION_NAVIGATE = 'false';
-            
-            vi.mocked(apiClient.startSession).mockResolvedValue({ sessionId: "test-session" });
+            process.env.NEXT_PUBLIC_START_SESSION_NAVIGATE = "false";
+
+            vi.mocked(apiClient.startSession).mockResolvedValue({
+                sessionId: "test-session",
+            });
 
             const user = userEvent.setup();
             renderWithSession(<WelcomePage />);
@@ -114,8 +120,10 @@ describe("Session Start Integration", () => {
             });
 
             // Verify error message
-            expect(screen.getByText(/this link is invalid/i)).toBeInTheDocument();
-            
+            expect(
+                screen.getByText(/this link is invalid/i)
+            ).toBeInTheDocument();
+
             // Verify retry and go home buttons exist
             expect(screen.getByTestId("retry-button")).toBeInTheDocument();
             expect(screen.getByTestId("go-home-button")).toBeInTheDocument();
@@ -134,7 +142,9 @@ describe("Session Start Integration", () => {
             await user.click(screen.getByTestId("get-started-button"));
 
             await waitFor(() => {
-                expect(screen.getByText(/this link has expired/i)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/this link has expired/i)
+                ).toBeInTheDocument();
             });
         });
 
@@ -151,7 +161,9 @@ describe("Session Start Integration", () => {
             await user.click(screen.getByTestId("get-started-button"));
 
             await waitFor(() => {
-                expect(screen.getByText(/unable to connect/i)).toBeInTheDocument();
+                expect(
+                    screen.getByText(/unable to connect/i)
+                ).toBeInTheDocument();
             });
         });
 
@@ -160,7 +172,7 @@ describe("Session Start Integration", () => {
                 new Error("Network error"),
                 { code: "NETWORK_ERROR" as const }
             );
-            
+
             // First call fails, second succeeds
             vi.mocked(apiClient.startSession)
                 .mockRejectedValueOnce(mockError)
@@ -182,7 +194,7 @@ describe("Session Start Integration", () => {
 
             // Should succeed and navigate
             await waitFor(() => {
-                expect(mockPush).toHaveBeenCalledWith('/conversation');
+                expect(mockPush).toHaveBeenCalledWith("/conversation");
             });
 
             // Should have called API twice
@@ -202,7 +214,9 @@ describe("Session Start Integration", () => {
             await user.click(screen.getByTestId("get-started-button"));
 
             await waitFor(() => {
-                expect(screen.getByTestId("go-home-button")).toBeInTheDocument();
+                expect(
+                    screen.getByTestId("go-home-button")
+                ).toBeInTheDocument();
             });
 
             await user.click(screen.getByTestId("go-home-button"));
@@ -213,17 +227,18 @@ describe("Session Start Integration", () => {
 
     describe("Accessibility", () => {
         it("should have aria-busy attribute during loading", async () => {
-            vi.mocked(apiClient.startSession).mockImplementation(() => 
-                new Promise((resolve) => {
-                    setTimeout(() => resolve({ sessionId: "test" }), 100);
-                })
+            vi.mocked(apiClient.startSession).mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        setTimeout(() => resolve({ sessionId: "test" }), 100);
+                    })
             );
 
             const user = userEvent.setup();
             renderWithSession(<WelcomePage />);
 
             const button = screen.getByTestId("get-started-button");
-            
+
             // Initially not busy
             expect(button).toHaveAttribute("aria-busy", "false");
 
@@ -272,17 +287,18 @@ describe("Session Start Integration", () => {
         });
 
         it("should disable button during loading", async () => {
-            vi.mocked(apiClient.startSession).mockImplementation(() => 
-                new Promise((resolve) => {
-                    setTimeout(() => resolve({ sessionId: "test" }), 50);
-                })
+            vi.mocked(apiClient.startSession).mockImplementation(
+                () =>
+                    new Promise((resolve) => {
+                        setTimeout(() => resolve({ sessionId: "test" }), 50);
+                    })
             );
 
             const user = userEvent.setup();
             renderWithSession(<WelcomePage />);
 
             const button = screen.getByTestId("get-started-button");
-            
+
             expect(button).not.toBeDisabled();
 
             await user.click(button);
@@ -292,4 +308,3 @@ describe("Session Start Integration", () => {
         });
     });
 });
-

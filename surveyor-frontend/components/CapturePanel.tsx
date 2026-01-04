@@ -13,6 +13,7 @@ export default function CapturePanel({
 }) {
     return (
         <Drawer
+            placement="bottom"
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             onClose={onClose}

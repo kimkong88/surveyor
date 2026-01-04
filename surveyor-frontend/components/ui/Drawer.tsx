@@ -5,9 +5,10 @@ import {
     DrawerContent,
     DrawerHeader,
     DrawerBody,
+    DrawerProps,
 } from "@heroui/react";
 
-type DrawerProps = {
+type Props = {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     onClose: () => void;
@@ -20,9 +21,10 @@ export default function Drawer({
     onOpenChange,
     children,
     title,
-}: DrawerProps) {
+    ...props
+}: Props & DrawerProps) {
     return (
-        <HeroUIDrawer isOpen={isOpen} onOpenChange={onOpenChange}>
+        <HeroUIDrawer {...props} isOpen={isOpen} onOpenChange={onOpenChange}>
             <DrawerContent>
                 {title && (
                     <DrawerHeader>
