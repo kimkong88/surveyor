@@ -8,58 +8,31 @@ As a homeowner,
 I want AI voice responses with captions and a voice toggle,
 so that I can follow guidance in my preferred modality.
 
+## Context
+Epic 2: Conversational Guidance (Voice/Text) with Accessibility. This story adds voice output capability to the text chat interface from Story 2.1.
+
+## In Scope
+- Voice toggle control (persists for session)
+- TTS (text-to-speech) playback for AI responses
+- Real-time captions alongside audio
+- Caption-only mode when voice disabled
+
+## Out of Scope
+- Voice input/microphone (Story 2.3)
+- Advanced TTS features (voice selection, speed control)
+
 ## Acceptance Criteria
 
-1. Given the assistant produces a response, when voice is enabled, then audio plays and real-time captions render in the Conversation Pane.
-2. Given I toggle voice off, when the next message arrives, then only captions/text render; audio is suppressed and the toggle state persists for the session.
+- [ ] **AC1**: Given the assistant produces a response, when voice is enabled, then audio plays and real-time captions render in the Conversation Pane.
 
-## Tasks / Subtasks
+- [ ] **AC2**: Given I toggle voice off, when the next message arrives, then only captions/text render; audio is suppressed and the toggle state persists for the session.
 
-- [ ] Add voice toggle control (persists for session)
-  - [ ] Store toggle state in client state (e.g., context/store)
-- [ ] Integrate TTS playback pipeline
-  - [ ] Render synchronized captions alongside audio
-- [ ] Implement caption-only rendering when voice disabled
-  - [ ] Ensure no audio initialization occurs in caption-only mode
-- [ ] Accessibility checks
-  - [ ] Toggle is keyboard-accessible and labeled
-  - [ ] Captions exposed to assistive tech
+## Recommended Approach
 
-## Dev Notes
-
-- UI framework: Next.js mobile-first; use accessible components and onPress semantics.
-- Maintain a single source of truth for voiceEnabled state; avoid race conditions between TTS and caption renderer.
-- Ensure graceful degradation: if TTS fails, fall back to captions without blocking.
-- Persist toggle across route changes; consider session-scoped persistence.
-
-### Project Structure Notes
-
-- Place UI control in Conversation Pane header/footer per IA.
-- Keep audio/caption logic modular to support future input (Story 2.3) without refactor.
-
-### References
-
-- Source: _bmad-output/planning-artifacts/epics.md#Story-2.2 (renumbered from 2.1)
-- Accessibility: WCAG 2.1 AA compliance notes in epics (Epic 2 context)
-
-## Dependencies
-
-- Story 2.1 (Text Chat Interface) - must exist to add voice output on top
-
-## Dev Agent Record
-
-### Agent Model Used
-
-GPT-5 (Cursor)
-
-### Completion Notes List
-
-- Ultimate context analysis complete; story set to ready-for-dev.
-- Renumbered from 2.1 to 2.2 to accommodate new Story 2.1 (Text Chat Interface)
-
-### File List
-
-- Conversation UI components (toggle, captions)
-- Audio playback module (TTS abstraction)
+- Add voice toggle control (button/switch) that persists state for session (sessionStorage or context)
+- Use Web Speech API (`speechSynthesis`) for TTS playback
+- Render captions alongside audio when voice enabled
+- Render captions only (no audio) when voice disabled
+- Ensure toggle state persists across route changes
 
 
