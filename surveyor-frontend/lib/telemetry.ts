@@ -96,3 +96,25 @@ export function trackSessionStartFailure(
     });
 }
 
+/**
+ * Tracks when idle banner is shown
+ * @param idleSeconds - elapsed idle seconds when shown
+ */
+export function trackIdleBannerShown(idleSeconds: number): void {
+    trackEvent("idle_banner_shown", {
+        idle_seconds: idleSeconds,
+        timestamp: Date.now(),
+    });
+}
+
+/**
+ * Tracks when idle banner continue is clicked
+ * @param idleSeconds - elapsed idle seconds at continue
+ */
+export function trackIdleBannerContinue(idleSeconds: number): void {
+    trackEvent("idle_banner_continue_clicked", {
+        idle_seconds: idleSeconds,
+        timestamp: Date.now(),
+    });
+}
+

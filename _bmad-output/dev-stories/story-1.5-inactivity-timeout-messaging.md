@@ -45,7 +45,7 @@ So that I’m not surprised if the session expires.
    - “Continue” button is focusable; focus is moved to banner when it appears.
    - Ensure escape hatch for keyboard users (button in natural tab order).
 4) Integration
-   - Mount the banner component inside `AppLayout` so it’s visible across primary routes.
+   - Mount the banner component inside `(survey)/layout.tsx` so it's visible across survey routes.
    - Hook into route changes to reset idle timer.
 5) Telemetry (lightweight)
    - Emit `idle_banner_shown` and `idle_banner_continue_clicked`.
@@ -80,16 +80,52 @@ So that I’m not surprised if the session expires.
 ## Definition of Done
 - All AC pass locally with configurable timeout.
 - Banner appears after idle threshold and dismisses on “Continue”.
-- Hook is reusable and integrated into `AppLayout`.
+- Hook is reusable and integrated into `(survey)/layout.tsx`.
 - Basic a11y validated; tests pass.
 
 ## Estimate
 - 0.25–0.5 day (hook, banner, integration, tests).
 
 ## Tasks
-- Implement `useIdleTimer({ timeoutMs })` hook with activity listeners.
-- Create `IdleBanner` component with accessible messaging and “Continue” CTA.
-- Integrate banner into `AppLayout`; wire to hook.
-- Add telemetry events (shown/clicked).
-- Write unit/integration and a11y checks.
+- [x] Implement `useIdleTimer({ timeoutMs })` hook with activity listeners.
+- [x] Create `IdleBanner` component with accessible messaging and “Continue” CTA.
+- [x] Integrate banner into `(survey)/layout.tsx`; wire to hook.
+- [x] Add telemetry events (shown/clicked).
+- [x] Write unit/integration and a11y checks.
+
+## Dev Agent Record
+### Implementation Plan
+- Added reusable `useIdleTimer` hook with default 5-minute timeout, activity listeners (mouse/keyboard/touch, visibilitychange), and route-change reset via `usePathname`. Exposes `isIdle`, `reset`, and `lastActiveAt`; respects `enabled` flag.
+
+### Completion Notes
+- Hook implemented with timer scheduling/cleanup and activity handling.
+- Unit tests cover idle transition, activity reset, manual reset, and route-change reset (`vitest run use-idle-timer`).
+- IdleBanner component added with polite live region, focus management, and "Continue" CTA that triggers reset.
+- Integrated banner into `(survey)/layout` with feature flag (`NEXT_PUBLIC_FEATURE_IDLE_BANNER`) and configurable timeout (`NEXT_PUBLIC_IDLE_TIMEOUT_MS`), using idle telemetry for shown/continue events.
+- Integration tests validate banner show/dismiss plus telemetry logging (`vitest run idle-banner use-idle-timer`).
+
+### Code Review Fixes Applied
+- **Fixed idle seconds calculation**: Replaced `useMemo` with `useState` + interval to update idle seconds every second while idle, fixing the "0 seconds" display bug.
+- **Added Escape key handler**: Banner now dismisses on Escape key press for keyboard accessibility.
+- **Added error handling**: Telemetry calls wrapped in try/catch to prevent failures from breaking banner functionality.
+- **Enhanced test coverage**: Added tests for visibilitychange behavior, enabled/disabled flag, feature flag disabled, unmount cleanup, Escape key, and idle seconds updates.
+- **Updated story text**: Fixed references from `AppLayout` to `(survey)/layout.tsx` to match actual implementation.
+
+## File List
+- surveyor-frontend/hooks/useIdleTimer.ts
+- surveyor-frontend/__tests__/use-idle-timer.spec.tsx
+- surveyor-frontend/components/IdleBanner.tsx
+- surveyor-frontend/app/(survey)/layout.tsx
+- surveyor-frontend/app/(survey)/conversation/layout.tsx
+- surveyor-frontend/lib/telemetry.ts
+- surveyor-frontend/__tests__/idle-banner-integration.spec.tsx
+
+## Change Log
+- Implemented idle timer hook and unit tests; moved story to in-progress.
+- Added idle banner UI, telemetry events, and integration tests; wired into (survey) layout with env-configurable timeout and feature flag.
+- Removed nested ProgressHeader in conversation layout to prevent duplicate header.
+- Code review fixes: Fixed idle seconds calculation bug, added Escape key handler, added error handling for telemetry, enhanced test coverage (12 tests total), updated story text consistency.
+
+## Status
+- done
 
